@@ -155,8 +155,15 @@ class CoronaClass {
     }
 
     func leave(_ p: Int) {
-        let index = seats.firstIndex(of: p)
-        seats.remove(at: index!)
-        distances[p] = 0
+        if (!seats.isEmpty && !distances.isEmpty)
+        {
+            let index = seats.firstIndex(of: p)
+            if (index != nil && p >= 0 && p < distances.count)
+            {
+                seats.remove(at: index!)
+                distances[p] = 0
+            }
+        }
     }
 }
+
