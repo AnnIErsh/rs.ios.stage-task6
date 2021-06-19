@@ -28,26 +28,77 @@ extension Deck {
 
     init(with type: DeckType) {
         self.type = type
+        self.cards = createDeck(suits: Suit.allCases, values: Value.allCases)
     }
 
-    public func createDeck(suits:[Suit], values:[Value]) -> [Card] {
-        []
+    public mutating func createDeck(suits:[Suit], values:[Value]) -> [Card] {
+        var newCards:[Card] = []
+        let sortedValues: [Value] = values.sorted(by: {
+            (a, b) in
+            return a.rawValue < b.rawValue
+        })
+        let sortedSuets: [Suit] = suits.sorted(by: {
+            (a, b) in
+            return a.rawValue < b.rawValue
+        })
+        for val in sortedValues
+        {
+            for suit in sortedSuets
+            {
+                let card = Card(suit: suit, value: val, isTrump: false)
+                newCards.append(card)
+            }
+        }
+        return newCards
     }
 
-    public func shuffle() {
-
+    public mutating func shuffle() {
+        let mix:[Card] = cards.shuffled()
+        cards = mix
     }
 
-    public func defineTrump() {
-
+    public mutating func defineTrump() {
+        if (!cards.isEmpty)
+        {
+            trump = cards.last?.suit
+            var i = 0
+            while (i < cards.count)
+            {
+                if (cards[i].suit == trump)
+                {
+                    cards[i].isTrump = true
+                }
+                i += 1
+            }
+        }
     }
 
-    public func initialCardsDealForPlayers(players: [Player]) {
-
+    public mutating func initialCardsDealForPlayers(players: [Player]) {
+        for player in players
+        {
+            var initialCards:[Card] = []
+            var i = 6
+            while (i > 0 && !cards.isEmpty && player.hand == nil)
+            {
+                
+                initialCards.append(cards[i])
+                cards.removeLast()
+                i -= 1
+            }
+            player.hand = initialCards
+        }
     }
 
-    public func setTrumpCards(for suit:Suit) {
-
+    public mutating func setTrumpCards(for suit: Suit) {
+        var i = 0
+        while (i < cards.count)
+        {
+            if (cards[i].suit == suit)
+            {
+                cards[i].isTrump = true
+            }
+            i += 1
+        }
     }
 }
 
