@@ -151,7 +151,6 @@ class CoronaClass {
         distances[index] = 1
         seats.append(index)
         seats.sort()
-        indexes.removeAll()
         return index
     }
 
